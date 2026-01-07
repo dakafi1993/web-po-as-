@@ -92,6 +92,20 @@ export async function initDatabase() {
       )
     `);
 
+    // Create default admin user if not exists
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@meteostanice.cz';
+    const adminPassword = '$2a$10$4xkrQptclJol2Ta6k28.GO6Dr0MZqYluOZzfxGKjWicRrl8O71I/.'; // Admin123Meteo!
+    const adminName = process.env.ADMIN_NAME || 'Josef Soukup';
+    
+    const userCheck = await client.query('SELECT id FROM users WHERE email = $1', [adminEmail]);
+    if (userCheck.rows.length === 0) {
+      await client.query(
+        'INSERT INTO users (email, password, name) VALUES ($1, $2, $3)',
+        [adminEmail, adminPassword, adminName]
+      );
+      console.log('✅ Admin user created:', adminEmail);
+    }
+
     console.log('✅ Database tables initialized');
   } catch (error) {
     console.error('❌ Database initialization error:', error);
