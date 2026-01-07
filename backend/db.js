@@ -60,11 +60,13 @@ export async function initDatabase() {
       CREATE TABLE IF NOT EXISTS temperatures (
         id SERIAL PRIMARY KEY,
         date DATE NOT NULL,
-        temp_6 DECIMAL(4,1) NOT NULL,
-        temp_12 DECIMAL(4,1) NOT NULL,
-        temp_18 DECIMAL(4,1) NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW(),
-        UNIQUE(date)
+        time VARCHAR(10) NOT NULL,
+        temperature DECIMAL(4,1) NOT NULL,
+        humidity DECIMAL(4,1),
+        pressure DECIMAL(6,1),
+        wind_speed DECIMAL(5,1),
+        precipitation DECIMAL(5,1),
+        created_at TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -104,6 +106,8 @@ export async function initDatabase() {
         [adminEmail, adminPassword, adminName]
       );
       console.log('✅ Admin user created:', adminEmail);
+    } else {
+      console.log('ℹ️  Admin user already exists:', adminEmail);
     }
 
     console.log('✅ Database tables initialized');

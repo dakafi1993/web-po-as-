@@ -10,8 +10,8 @@ router.get('/year/:year', async (req, res) => {
     const { year } = req.params;
     const result = await pool.query(
       `SELECT * FROM temperatures 
-       WHERE EXTRACT(YEAR FROM date) = $1 
-       ORDER BY date ASC`,
+       WHERE EXTRACT(YEAR FROM CAST(date AS DATE)) = $1 
+       ORDER BY date ASC, time ASC`,
       [year]
     );
     res.json(result.rows);
@@ -24,15 +24,13 @@ router.get('/year/:year', async (req, res) => {
 // Add temperature (protected)
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { date, temp6, temp12, temp18 } = req.body;
+    const { date, time, temperature, humidity, pressure, wind_speed, precipitation } = req.body;
     
     const result = await pool.query(
-      `INSERT INTO temperatures (date, temp_6, temp_12, temp_18) 
-       VALUES ($1, $2, $3, $4) 
-       ON CONFLICT (date) DO UPDATE 
-       SET temp_6 = $2, temp_12 = $3, temp_18 = $4
+      `INSERT INTO temperatures (date, time, temperature, humidity, pressure, wind_speed, precipitation) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7) 
        RETURNING *`,
-      [date, temp6, temp12, temp18]
+      [date, time, temperature, humidity, pressure, wind_speed, precipitation]
     );
     
     res.json(result.rows[0]);
