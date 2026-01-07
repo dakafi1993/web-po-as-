@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileEdit, Save, Search } from 'lucide-react';
+import { FileEdit, Save, Search, Image, Link } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../lib/api';
 
@@ -57,6 +57,8 @@ export function PageEditor() {
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+  const [showImageDialog, setShowImageDialog] = useState(false);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -64,11 +66,12 @@ export function PageEditor() {
       setLoading(true);
       try {
         const data = await api.getPage(selectedPage.path);
-        setContent(data.content || `# ${selectedPage.title}\n\nObsah stránky "${selectedPage.title}"`);
+        console.log('Loaded page data:', data);
+        setContent(data.content || '');
         setTitle(data.title || selectedPage.title);
       } catch (error) {
         console.error('Error loading page:', error);
-        setContent(`# ${selectedPage.title}\n\nObsah stránky "${selectedPage.title}"`);
+        setContent('');
         setTitle(selectedPage.title);
       } finally {
         setLoading(false);
@@ -102,6 +105,20 @@ export function PageEditor() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const insertImage = () => {
+    if (imageUrl) {
+      const markdown = `\n![Obrázek](${imageUrl})\n`;
+      setContent(content + markdown);
+      setImageUrl('');
+      setShowImageDialog(false);
+    }
+  };
+
+  const insertLink = () => {
+    const markdown = `\n[Text odkazu](url)\n`;
+    setContent(content + markdown);
   };
 
   return (
@@ -188,17 +205,64 @@ export function PageEditor() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Obsah stránky (Markdown)
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium text-gray-300">
+                      Obsah stránky (Markdown)
+                    </label>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setShowImageDialog(!showImageDialog)}
+                        className="flex items-center gap-1 px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/50 text-purple-300 rounded-lg text-xs transition-all"
+                      >
+                        <Image className="w-4 h-4" />
+                        Vložit obrázek
+                      </button>
+                      <button
+                        onClick={insertLink}
+                        className="flex items-center gap-1 px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-300 rounded-lg text-xs transition-all"
+                      >
+                        <Link className="w-4 h-4" />
+                        Vložit odkaz
+                      </button>
+                    </div>
+                  </div>
+
+                  {showImageDialog && (
+                    <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 mb-3">
+                      <label className="block text-sm text-purple-300 mb-2">URL obrázku:</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={imageUrl}
+                          onChange={(e) => setImageUrl(e.target.value)}
+                          placeholder="https://example.com/image.jpg"
+                          className="flex-1 bg-slate-900/50 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        />
+                        <button
+                          onClick={insertImage}
+                          className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm transition-all"
+                        >
+                          Vložit
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-2">💡 Nahrajte obrázek na imgur.com nebo jinou službu a vložte URL</p>
+                    </div>
+                  )}
+
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     disabled={loading}
                     rows={20}
                     className="w-full bg-slate-900/50 border border-white/20 rounded-xl px-4 py-3 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50"
-                    placeholder="# Nadpis stránky&#10;&#10;Text obsahu..."
+                    placeholder="Začněte psát obsah stránky...&#10;&#10;Můžete použít Markdown formátování."
                   />
+                  
+                  {content && (
+                    <div className="text-xs text-gray-400 mt-1">
+                      {content.length} znaků
+                    </div>
+                  )}
                 </div>
 
                 <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
@@ -208,7 +272,8 @@ export function PageEditor() {
                     <li><code className="text-cyan-400">## Nadpis 2</code> - podnadpis</li>
                     <li><code className="text-cyan-400">**tučný text**</code> - tučné písmo</li>
                     <li><code className="text-cyan-400">*kurzíva*</code> - kurzíva</li>
-                    <li><code className="text-cyan-400">[odkaz](url)</code> - odkaz</li>
+                    <li><code className="text-cyan-400">[text odkazu](url)</code> - odkaz</li>
+                    <li><code className="text-cyan-400">![popis](url-obrazku)</code> - obrázek</li>
                   </ul>
                 </div>
               </div>
