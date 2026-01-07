@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import temperaturesRoutes from './routes/temperatures.js';
 import articlesRoutes from './routes/articles.js';
+import photosRoutes from './routes/photos.js';
 import { initDatabase } from './db.js';
 
 dotenv.config();
