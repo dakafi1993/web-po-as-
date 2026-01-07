@@ -4,12 +4,18 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import temperaturesRoutes from './routes/temperatures.js';
 import articlesRoutes from './routes/articles.js';
-import photosRoutes from './routes/photos.js';
+import { initDatabase } from './db.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Initialize database
+initDatabase().catch(err => {
+  console.error('Failed to initialize database:', err);
+  console.log('⚠️  Server will continue but database operations may fail');
+});
 
 // Middleware
 app.use(cors({

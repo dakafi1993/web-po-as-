@@ -10,7 +10,9 @@ const useMockDb = !process.env.DATABASE_URL;
 
 export const pool = useMockDb ? null : new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: process.env.NODE_ENV === 'production' ? { 
+    rejectUnauthorized: false 
+  } : false
 });
 
 // Mock in-memory database for development without PostgreSQL
