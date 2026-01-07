@@ -97,7 +97,7 @@ export async function initDatabase() {
 
     // Create default admin user if not exists, or update password if exists
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@meteostanice.cz';
-    const adminPassword = '$2a$10$4xkrQptclJol2Ta6k28.GO6Dr0MZqYluOZzfxGKjWicRrl8O71I/.'; // Admin123Meteo!
+    const adminPassword = '$2a$10$uA6dHnd.ANxb2VXagoCAMOZFa6bBSNbFgBH3g9utRIxoumHOhefs6'; // Admin123Meteo!
     const adminName = process.env.ADMIN_NAME || 'Josef Soukup';
     
     const userCheck = await client.query('SELECT id FROM users WHERE email = $1', [adminEmail]);
