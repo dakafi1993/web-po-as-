@@ -10,43 +10,77 @@ interface Page {
 }
 
 const pages: Page[] = [
-  // O meteostanici
-  { path: '/o-meteostanici/aktualni-pocasi', title: 'Aktuální počasí', category: 'O meteostanici' },
-  { path: '/o-meteostanici/fotogalerie', title: 'Fotogalerie', category: 'O meteostanici' },
-  { path: '/o-meteostanici/rozcestnik', title: 'Rozcestník', category: 'O meteostanici' },
-  { path: '/o-meteostanici/historicke-extremy', title: 'Historické extrémy', category: 'O meteostanici' },
+  // Hlavní
+  { path: '/', title: 'VŠE O POČASÍ', category: 'Hlavní' },
+  { path: '/online-data', title: 'Online data', category: 'Hlavní' },
+  { path: '/mesicni-statistika', title: 'Měsíční statistika teploty (Online)', category: 'Hlavní' },
   
-  // Počasí
-  { path: '/pocasi/srazky', title: 'Srážky', category: 'Počasí' },
-  { path: '/pocasi/tlak-vzduchu', title: 'Tlak vzduchu', category: 'Počasí' },
-  { path: '/pocasi/bourecna-cinnost', title: 'Bouřečná činnost', category: 'Počasí' },
-  { path: '/pocasi/orkany', title: 'Orkány', category: 'Počasí' },
-  
-  // Archivy teplot
+  // Naměřené teploty
   ...Array.from({ length: 19 }, (_, i) => ({
-    path: `/archivy-teplot/${2008 + i}`,
-    title: `Archiv ${2008 + i}`,
-    category: 'Archivy teplot'
+    path: `/temperatures/${2026 - i}`,
+    title: `Naměřené teploty rok ${2026 - i}`,
+    category: 'Naměřené teploty'
   })),
   
-  // Grafy
-  { path: '/grafy/mesicni-prumery', title: 'Měsíční průměry', category: 'Grafy' },
-  { path: '/grafy/rocni-prumery', title: 'Roční průměry', category: 'Grafy' },
-  { path: '/grafy/extremy', title: 'Extrémy', category: 'Grafy' },
+  // Bouřky a orkány
+  { path: '/bourky-na-vysocine', title: 'Bouřky na Vysočině', category: 'Bouřky a orkány' },
+  { path: '/orkany', title: 'Orkány a jejich škody', category: 'Bouřky a orkány' },
+  { path: '/orkany-2020', title: 'Orkány a jejich škody 2020', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-andrea', title: 'Pokles tlaku při tlakové níži Andrea', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-fabienne', title: 'Pokles tlaku při tlakové níži Fabienne', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-joachim', title: 'Pokles tlaku při tlakové níži Joachim', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-mischka', title: 'Pokles tlaku při tlakové níži Mischka', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-niklas', title: 'Pokles tlaku při tlakové níži Niklas', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-herwart', title: 'Pokles tlaku při tlakové níži Herwart', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-sabine', title: 'Pokles tlaku při tlakové níži Sabine', category: 'Bouřky a orkány' },
+  { path: '/orkan-xaver', title: 'Pokles tlaku při orkánu Xaver', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-zehra', title: 'Pokles tlaku při tlakové níži Zehra', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-joachim-2011', title: 'Tlaková níže Joachim a vichřice během dne 16.12. 2011', category: 'Bouřky a orkány' },
+  { path: '/tlakova-nize-andrea-2012', title: 'Tlaková níže Andrea dne 5.1. 2012', category: 'Bouřky a orkány' },
   
-  // Články
-  { path: '/clanky', title: 'Články', category: 'Články' },
+  // Meteorologie - základy
+  { path: '/pocasi-klima', title: 'Co je počasí a co klima?', category: 'Meteorologie - základy' },
+  { path: '/beaufortova-stupnice', title: 'Beaufortova stupnice', category: 'Meteorologie - základy' },
+  { path: '/teplota-vzduchu', title: 'Teplota vzduchu', category: 'Meteorologie - základy' },
+  { path: '/srazky', title: 'Srážky a jejich složení', category: 'Meteorologie - základy' },
+  { path: '/destove-srazky', title: 'Dešťové srážky v mm', category: 'Meteorologie - základy' },
+  { path: '/snehova-pokryvka', title: 'Sněhová pokrývka v cm', category: 'Meteorologie - základy' },
+  { path: '/mlhy', title: 'Mlhy na Vysočině', category: 'Meteorologie - základy' },
+  { path: '/slunecni-zareni', title: 'Sluneční záření', category: 'Meteorologie - základy' },
+  { path: '/tlakova-nize', title: 'Tlaková níže', category: 'Meteorologie - základy' },
+  { path: '/tlakova-vyse', title: 'Tlaková výše', category: 'Meteorologie - základy' },
+  { path: '/pocasi-tlakova-vyse', title: 'Počasí v tlakové výši', category: 'Meteorologie - základy' },
+  { path: '/pocasi-tlakova-nize', title: 'Počasí v tlakové níži', category: 'Meteorologie - základy' },
+  { path: '/vznik-teple-fronty', title: 'Vznik teplé fronty', category: 'Meteorologie - základy' },
+  { path: '/vznik-studene-fronty', title: 'Vznik studené fronty', category: 'Meteorologie - základy' },
+  { path: '/vznik-okluzni-fronty', title: 'Vznik okluzní fronty', category: 'Meteorologie - základy' },
   
-  // Odkazy
-  { path: '/odkazy/mestecka-pocasi', title: 'Městečka s počasím', category: 'Odkazy' },
-  { path: '/odkazy/severni-cechy', title: 'Severní Čechy', category: 'Odkazy' },
-  { path: '/odkazy/vychodni-cechy', title: 'Východní Čechy', category: 'Odkazy' },
-  { path: '/odkazy/stredni-cechy', title: 'Střední Čechy', category: 'Odkazy' },
-  { path: '/odkazy/jizni-cechy', title: 'Jižní Čechy', category: 'Odkazy' },
-  { path: '/odkazy/morava', title: 'Morava', category: 'Odkazy' },
+  // Detekce a radar
+  { path: '/detekce-blesku', title: 'Detekce blesků nad ČR', category: 'Detekce a radar' },
+  { path: '/meteorologicky-radar', title: 'Meteorologický radar', category: 'Detekce a radar' },
+  { path: '/radar-bourky', title: 'Radar bouřky', category: 'Detekce a radar' },
+  { path: '/niederschlagsradar', title: 'Niederschlagsradar', category: 'Detekce a radar' },
+  { path: '/druzice-eumetsat', title: 'Družice Eumetsat', category: 'Detekce a radar' },
+  { path: '/povidani-blesky', title: 'Povídání o blescích', category: 'Detekce a radar' },
+  { path: '/povidani-vitr', title: 'Povídání o rychlosti větru', category: 'Detekce a radar' },
   
-  // Kontakt
-  { path: '/kontakt', title: 'Kontakt', category: 'Kontakt' },
+  // Přístroje a stanice
+  { path: '/pouzivane-pristroje', title: 'Používané přístroje', category: 'Přístroje a stanice' },
+  { path: '/popis-pristroju', title: 'Popis přístrojů', category: 'Přístroje a stanice' },
+  { path: '/stanice-chmu', title: 'Meteorologické stanice ČHMÚ', category: 'Přístroje a stanice' },
+  { path: '/kontakty-stanic', title: 'Kontakty meteorologických stanic', category: 'Přístroje a stanice' },
+  { path: '/stanice-kostelni-myslova', title: 'Naše nejbližší Meteorologická stanice Kostelní Myslová', category: 'Přístroje a stanice' },
+  { path: '/predpoved-vysocina', title: 'Předpověď počasí a grafy pro Vysočinu', category: 'Přístroje a stanice' },
+  
+  // Vysočina
+  { path: '/geologie-vysocina', title: 'Geologie a geomorfologie kraje Vysočina', category: 'Vysočina' },
+  { path: '/nejvyssi-vrchol', title: 'Nejvyšší vrchol', category: 'Vysočina' },
+  { path: '/studanka-pane', title: 'Studánka Páně', category: 'Vysočina' },
+  { path: '/gps', title: 'Odkaz na GPS', category: 'Vysočina' },
+  
+  // Ostatní
+  { path: '/foto', title: 'Foto', category: 'Ostatní' },
+  { path: '/kontakt', title: 'Kontakt', category: 'Ostatní' },
 ];
 
 export function PageEditor() {
