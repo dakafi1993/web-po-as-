@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, FileText, Thermometer, Image } from 'lucide-react';
+import { LogOut, FileText, Thermometer, Image, FileEdit } from 'lucide-react';
 import { Header } from '../components/Header';
 import { AddTemperatureForm } from '../components/admin/AddTemperatureForm';
 import { AddArticleForm } from '../components/admin/AddArticleForm';
 import { AddPhotoForm } from '../components/admin/AddPhotoForm';
+import { PageEditor } from '../components/admin/PageEditor';
 
-type TabType = 'overview' | 'temperatures' | 'articles' | 'photos';
+type TabType = 'overview' | 'pages' | 'temperatures' | 'articles' | 'photos';
 
 export function AdminDashboard() {
   const { logout, user } = useAuth();
@@ -22,6 +23,7 @@ export function AdminDashboard() {
 
   const tabs = [
     { id: 'overview' as TabType, label: 'Přehled', icon: FileText },
+    { id: 'pages' as TabType, label: 'Editor stránek', icon: FileEdit },
     { id: 'temperatures' as TabType, label: 'Teploty', icon: Thermometer },
     { id: 'articles' as TabType, label: 'Články', icon: FileText },
     { id: 'photos' as TabType, label: 'Fotografie', icon: Image },
@@ -109,6 +111,7 @@ export function AdminDashboard() {
             {activeTab === 'temperatures' && <AddTemperatureForm />}
             {activeTab === 'articles' && <AddArticleForm />}
             {activeTab === 'photos' && <AddPhotoForm />}
+            {activeTab === 'pages' && <PageEditor />}
           </div>
         </div>
       </div>
