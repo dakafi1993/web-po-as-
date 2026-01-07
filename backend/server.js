@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.js';
 import temperaturesRoutes from './routes/temperatures.js';
 import articlesRoutes from './routes/articles.js';
 import photosRoutes from './routes/photos.js';
+import pagesRoutes from './routes/pages.js';
 import { initDatabase } from './db.js';
 
 dotenv.config();
@@ -36,6 +37,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/temperatures', temperaturesRoutes);
 app.use('/api/articles', articlesRoutes);
 app.use('/api/photos', photosRoutes);
+app.use('/api/pages', pagesRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FileEdit, Save, Search } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { api } from '../../lib/api';
 
 interface Page {
   path: string;
@@ -48,9 +50,32 @@ const pages: Page[] = [
 ];
 
 export function PageEditor() {
+  const { token } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPage, setSelectedPage] = useState<Page | null>(null);
   const [content, setContent] = useState('');
+  const [title, setTitle] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const loadPage = async () => {
+      if (!selectedPage) return;
+      setLoading(true);
+      try {
+        const data = await api.getPage(selectedPage.path);
+        setContent(data.content || `# ${selectedPage.title}\n\nObsah stránky "${selectedPage.title}"`);
+        setTitle(data.title || selectedPage.title);
+      } catch (error) {
+        console.error('Error loading page:', error);
+        setContent(`# ${selectedPage.title}\n\nObsah stránky "${selectedPage.title}"`);
+        setTitle(selectedPage.title);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPage();
+  }, [selectedPage]);
 
   const filteredPages = pages.filter(page =>
     page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,9 +90,18 @@ export function PageEditor() {
     return acc;
   }, {} as Record<string, Page[]>);
 
-  const handleSave = () => {
-    console.log('Saving page:', selectedPage?.path, content);
-    alert('Obsah stránky uložen! (Demo - zatím není připojená databáze)');
+  const handleSave = async () => {
+    if (!selectedPage || !token) return;
+    setSaving(true);
+    try {
+      await api.updatePage(token, selectedPage.path, { title, content });
+      alert('✅ Obsah stránky uložen!');
+    } catch (error) {
+      console.error('Error saving page:', error);
+      alert('❌ Chyba při ukládání stránky');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -102,7 +136,6 @@ export function PageEditor() {
                     key={page.path}
                     onClick={() => {
                       setSelectedPage(page);
-                      setContent(`# ${page.title}\n\nObsah stránky "${page.title}"`);
                     }}
                     className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
                       selectedPage?.path === page.path
@@ -132,14 +165,28 @@ export function PageEditor() {
                 </div>
                 <button
                   onClick={handleSave}
-                  className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all"
+                  disabled={saving || loading}
+                  className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50"
                 >
                   <Save className="w-5 h-5" />
-                  Uložit
+                  {saving ? 'Ukládám...' : 'Uložit'}
                 </button>
               </div>
 
               <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Název stránky
+                  </label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    disabled={loading}
+                    className="w-full bg-slate-900/50 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50"
+                  />
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Obsah stránky (Markdown)
@@ -147,8 +194,9 @@ export function PageEditor() {
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
+                    disabled={loading}
                     rows={20}
-                    className="w-full bg-slate-900/50 border border-white/20 rounded-xl px-4 py-3 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full bg-slate-900/50 border border-white/20 rounded-xl px-4 py-3 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50"
                     placeholder="# Nadpis stránky&#10;&#10;Text obsahu..."
                   />
                 </div>

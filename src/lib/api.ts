@@ -83,5 +83,26 @@ export const api = {
     });
     if (!res.ok) throw new Error('Failed to upload photo');
     return res.json();
+  },
+
+  // Pages
+  getPage: async (path: string) => {
+    const res = await fetch(`${API_URL}/pages${path}`);
+    if (!res.ok) throw new Error('Failed to fetch page');
+    return res.json();
+  },
+
+  updatePage: async (token: string, path: string, data: { title: string; content: string }) => {
+    const res = await fetch(`${API_URL}/pages${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Failed to update page');
+    return res.json();
   }
 };
+

@@ -95,6 +95,18 @@ export async function initDatabase() {
       )
     `);
 
+    // Pages table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS pages (
+        id SERIAL PRIMARY KEY,
+        path VARCHAR(500) UNIQUE NOT NULL,
+        title VARCHAR(500) NOT NULL,
+        content TEXT,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
     // Create default admin user if not exists, or update password if exists
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@meteostanice.cz';
     const adminPassword = '$2a$10$uA6dHnd.ANxb2VXagoCAMOZFa6bBSNbFgBH3g9utRIxoumHOhefs6'; // Admin123Meteo!
