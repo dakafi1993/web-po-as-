@@ -21,7 +21,11 @@ initDatabase().catch(err => {
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://web-po-as.vercel.app', 'https://web-po-as-git-main.vercel.app']
+    ? [
+        'https://frontend-production-d16d.up.railway.app',
+        'https://web-po-as.vercel.app', 
+        'https://web-po-as-git-main.vercel.app'
+      ]
     : 'http://localhost:5173',
   credentials: true
 }));

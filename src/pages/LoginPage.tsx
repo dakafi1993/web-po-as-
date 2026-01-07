@@ -20,6 +20,7 @@ export function LoginPage() {
       await login(email, password);
       navigate('/admin');
     } catch (err) {
+      console.error('Login error:', err);
       setError('Nesprávné přihlašovací údaje');
     } finally {
       setLoading(false);
