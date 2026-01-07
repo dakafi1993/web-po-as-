@@ -94,7 +94,7 @@ export async function initDatabase() {
       )
     `);
 
-    // Create default admin user if not exists
+    // Create default admin user if not exists, or update password if exists
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@meteostanice.cz';
     const adminPassword = '$2a$10$4xkrQptclJol2Ta6k28.GO6Dr0MZqYluOZzfxGKjWicRrl8O71I/.'; // Admin123Meteo!
     const adminName = process.env.ADMIN_NAME || 'Josef Soukup';
@@ -107,7 +107,12 @@ export async function initDatabase() {
       );
       console.log('✅ Admin user created:', adminEmail);
     } else {
-      console.log('ℹ️  Admin user already exists:', adminEmail);
+      // Update password to ensure it matches
+      await client.query(
+        'UPDATE users SET password = $1 WHERE email = $2',
+        [adminPassword, adminEmail]
+      );
+      console.log('✅ Admin password updated:', adminEmail);
     }
 
     console.log('✅ Database tables initialized');
