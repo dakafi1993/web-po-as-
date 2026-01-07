@@ -55,9 +55,10 @@ export async function initDatabase() {
       )
     `);
 
-    // Temperatures table
+    // Temperatures table - drop and recreate to ensure correct schema
+    await client.query(`DROP TABLE IF EXISTS temperatures`);
     await client.query(`
-      CREATE TABLE IF NOT EXISTS temperatures (
+      CREATE TABLE temperatures (
         id SERIAL PRIMARY KEY,
         date DATE NOT NULL,
         time VARCHAR(10) NOT NULL,
