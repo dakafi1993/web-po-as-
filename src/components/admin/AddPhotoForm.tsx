@@ -26,9 +26,6 @@ export function AddPhotoForm() {
       formData.append('category', 'bourky');
 
       await api.uploadPhoto(token, formData);
-        photoURL,
-        createdAt: new Date(),
-      });
 
       setSuccess(true);
       setTitle('');

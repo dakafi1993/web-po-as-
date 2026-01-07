@@ -12,7 +12,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://web-po-as.vercel.app', 'https://web-po-as-git-main.vercel.app']
+    : 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
@@ -22,8 +27,12 @@ app.use('/api/articles', articlesRoutes);
 app.use('/api/photos', photosRoutes);
 
 // Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', message: 'Meteostanice API is running' });
+});
+
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Meteostanice API is running' });
+  res.json({ status: 'OK', message: 'Meteostanice API is running' });
 });
 
 app.listen(PORT, () => {
